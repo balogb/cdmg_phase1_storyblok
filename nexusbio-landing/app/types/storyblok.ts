@@ -1,153 +1,176 @@
-import type { SbBlokData } from "@storyblok/react/rsc";
+import { z } from "zod";
 
-// Asset type
-export interface StoryblokAsset {
-  filename: string;
-  alt?: string;
-}
+// --- Base Schemas ---
 
-// Link type
-export interface StoryblokLink {
-  cached_url: string;
-  linktype: string;
-}
+export const StoryblokAssetSchema = z.object({
+  filename: z.string(),
+  alt: z.string().optional(),
+});
 
-// Richtext type
-export type StoryblokRichtext = {
+export const StoryblokLinkSchema = z.object({
+  cached_url: z.string().optional(),
+  url: z.string().optional(),
+  linktype: z.string(),
+});
+
+interface StoryblokRichTextNode {
   type: string;
-  content?: StoryblokRichtext[];
-  [key: string]: unknown;
-};
-
-// Hero Section
-export interface HeroSectionStoryblok extends SbBlokData {
-  component: "hero_section";
-  logo?: StoryblokAsset;
-  headline: string;
-  subheadline: string;
-  cta_text: string;
-  cta_link: StoryblokLink;
-  background_image?: StoryblokAsset;
-  legal_disclaimer: any; // Richtext type
-  show_trial_badge: boolean;
-  variant?: "control" | "variant_b";
+  content?: StoryblokRichTextNode[];
+  [key: string]: any;
 }
 
-// Feature Block
-export interface FeatureBlockStoryblok extends SbBlokData {
-  component: "feature_block";
-  icon?: StoryblokAsset;
-  title: string;
-  description: string;
-  citation?: string;
-}
+export const StoryblokRichtextSchema: z.ZodType<StoryblokRichTextNode> = z.lazy(() =>
+  z.object({
+    type: z.string(),
+    content: z.array(StoryblokRichtextSchema).optional(),
+  }).catchall(z.any())
+);
 
-// Features Section
-export interface FeaturesSectionStoryblok extends SbBlokData {
-  component: "features_section";
-  section_title: string;
-  section_subtitle?: string;
-  features: FeatureBlockStoryblok[];
-}
+// --- Component Schemas ---
 
-// Stat Block
-export interface StatBlockStoryblok extends SbBlokData {
-  component: "stat_block";
-  metric: string;
-  metric_label: string;
-  context?: string;
-}
+export const HeroSectionSchema = z.object({
+  component: z.literal("hero_section"),
+  logo: StoryblokAssetSchema.optional().nullable(),
+  headline: z.string().min(1, "Headline is required"),
+  subheadline: z.string().min(1, "Subheadline is required"),
+  cta_text: z.string().default("Learn More"),
+  cta_link: StoryblokLinkSchema,
+  background_image: StoryblokAssetSchema.optional().nullable(),
+  legal_disclaimer: z.any().optional(), // Richtext
+  show_trial_badge: z.boolean().default(false),
+  variant: z.enum(["control", "variant_b"]).default("control"),
+  _uid: z.string(),
+});
 
-// Clinical Data Section
-export interface ClinicalDataSectionStoryblok extends SbBlokData {
-  component: "clinical_data_section";
-  section_title: string;
-  data_points: StatBlockStoryblok[];
-  trial_disclaimer: StoryblokRichtext;
-  data_source?: string;
-}
+export const FeatureBlockSchema = z.object({
+  component: z.literal("feature_block"),
+  icon: StoryblokAssetSchema.optional().nullable(),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  citation: z.string().optional(),
+  _uid: z.string(),
+});
 
-// Resource Link
-export interface ResourceLinkStoryblok extends SbBlokData {
-  component: "resource_link";
-  title: string;
-  description?: string;
-  link: StoryblokLink;
-  file_type: "pdf" | "sec" | "presentation" | "external";
-}
+export const FeaturesSectionSchema = z.object({
+  component: z.literal("features_section"),
+  section_title: z.string().min(1),
+  section_subtitle: z.string().optional(),
+  features: z.array(FeatureBlockSchema).default([]),
+  _uid: z.string(),
+});
 
-// Investor Resources Section
-export interface InvestorResourcesSectionStoryblok extends SbBlokData {
-  component: "investor_resources_section";
-  section_title: string;
-  resources: ResourceLinkStoryblok[];
-}
+export const StatBlockSchema = z.object({
+  component: z.literal("stat_block"),
+  metric: z.string().min(1),
+  metric_label: z.string().min(1),
+  context: z.string().optional(),
+  _uid: z.string(),
+});
 
-// Footer Link
-export interface FooterLinkStoryblok extends SbBlokData {
-  component: "footer_link";
-  label: string;
-  url: StoryblokLink;
-}
+export const ClinicalDataSectionSchema = z.object({
+  component: z.literal("clinical_data_section"),
+  section_title: z.string().min(1),
+  data_points: z.array(StatBlockSchema).default([]),
+  trial_disclaimer: StoryblokRichtextSchema.optional(),
+  data_source: z.string().optional(),
+  _uid: z.string(),
+});
 
-// Footer Section
-export interface FooterSectionStoryblok extends SbBlokData {
-  component: "footer_section";
-  company_name: string;
-  copyright_text: string;
-  legal_links: FooterLinkStoryblok[];
-  compliance_notice: StoryblokRichtext;
-  contact_email?: string;
-}
+export const ResourceLinkSchema = z.object({
+  component: z.literal("resource_link"),
+  title: z.string().min(1),
+  description: z.string().optional(),
+  link: StoryblokLinkSchema,
+  file_type: z.enum(["pdf", "sec", "presentation", "external"]),
+  _uid: z.string(),
+});
 
-// Nav Item
-export interface NavItemStoryblok extends SbBlokData {
-  component: "nav_item";
-  label: string;
-  link: {
-    url: string;
-    linktype: string;
-    cached_url: string;
-  };
-}
+export const InvestorResourcesSectionSchema = z.object({
+  component: z.literal("investor_resources_section"),
+  section_title: z.string().min(1),
+  resources: z.array(ResourceLinkSchema).default([]),
+  _uid: z.string(),
+});
 
-// Global Settings
-export interface GlobalSettingsStoryblok extends SbBlokData {
-  component: "global_settings";
-  logo?: {
-    filename: string;
-    alt?: string;
-  };
-  navigation?: NavItemStoryblok[];
-  footer_text?: any; // Richtext
-  contact_email?: string;
-  copyright?: string;
-}
+export const FooterLinkSchema = z.object({
+  component: z.literal("footer_link"),
+  label: z.string().min(1),
+  url: StoryblokLinkSchema,
+  _uid: z.string(),
+});
 
-// Page (Root)
-export interface PageStoryblok extends SbBlokData {
-  component: "page";
-  body: (
-    | HeroSectionStoryblok
-    | FeaturesSectionStoryblok
-    | ClinicalDataSectionStoryblok
-    | InvestorResourcesSectionStoryblok
-    | FooterSectionStoryblok
-  )[];
-  seo_title: string;
-  seo_description: string;
-  og_image?: StoryblokAsset;
-}
+export const FooterSectionSchema = z.object({
+  component: z.literal("footer_section"),
+  company_name: z.string().min(1),
+  copyright_text: z.string().min(1),
+  legal_links: z.array(FooterLinkSchema).default([]),
+  compliance_notice: StoryblokRichtextSchema.optional(),
+  contact_email: z.string().email().optional().or(z.literal("")),
+  _uid: z.string(),
+});
 
-// Story wrapper
-export interface StoryblokStory {
-  id: number;
-  uuid: string;
-  name: string;
-  slug: string;
-  full_slug: string;
-  content: PageStoryblok;
-  created_at: string;
-  published_at: string;
-  first_published_at: string;
-}
+export const NavItemSchema = z.object({
+  component: z.literal("nav_item"),
+  label: z.string().min(1),
+  link: StoryblokLinkSchema,
+  _uid: z.string(),
+});
+
+export const GlobalSettingsSchema = z.object({
+  component: z.literal("global_settings"),
+  logo: StoryblokAssetSchema.optional().nullable(),
+  navigation: z.array(NavItemSchema).default([]),
+  footer_text: z.any().optional(), // Richtext
+  contact_email: z.string().optional().nullable(),
+  copyright: z.string().optional().nullable(),
+  _uid: z.string(),
+});
+
+export const PageSchema = z.object({
+  component: z.literal("page"),
+  body: z.array(
+    z.discriminatedUnion("component", [
+      HeroSectionSchema,
+      FeaturesSectionSchema,
+      ClinicalDataSectionSchema,
+      InvestorResourcesSectionSchema,
+      FooterSectionSchema,
+    ])
+  ).default([]),
+  seo_title: z.string().max(60).optional().default("NexusBio Therapeutics"),
+  seo_description: z.string().max(160).optional().default("Advancing oncology therapeutics."),
+  og_image: StoryblokAssetSchema.optional().nullable(),
+  _uid: z.string(),
+});
+
+export const StorySchema = z.object({
+  id: z.number(),
+  uuid: z.string(),
+  name: z.string(),
+  slug: z.string(),
+  full_slug: z.string(),
+  content: PageSchema,
+  created_at: z.string(),
+  published_at: z.string().nullable(),
+  first_published_at: z.string().nullable(),
+});
+
+// --- Inferred Types ---
+
+export type StoryblokAsset = z.infer<typeof StoryblokAssetSchema>;
+export type StoryblokLink = z.infer<typeof StoryblokLinkSchema>;
+export type StoryblokRichtext = z.infer<typeof StoryblokRichtextSchema>;
+
+export type HeroSectionStoryblok = z.infer<typeof HeroSectionSchema>;
+export type FeatureBlockStoryblok = z.infer<typeof FeatureBlockSchema>;
+export type FeaturesSectionStoryblok = z.infer<typeof FeaturesSectionSchema>;
+export type StatBlockStoryblok = z.infer<typeof StatBlockSchema>;
+export type ClinicalDataSectionStoryblok = z.infer<typeof ClinicalDataSectionSchema>;
+export type ResourceLinkStoryblok = z.infer<typeof ResourceLinkSchema>;
+export type InvestorResourcesSectionStoryblok = z.infer<typeof InvestorResourcesSectionSchema>;
+export type FooterLinkStoryblok = z.infer<typeof FooterLinkSchema>;
+export type FooterSectionStoryblok = z.infer<typeof FooterSectionSchema>;
+export type NavItemStoryblok = z.infer<typeof NavItemSchema>;
+export type GlobalSettingsStoryblok = z.infer<typeof GlobalSettingsSchema>;
+export type PageStoryblok = z.infer<typeof PageSchema>;
+export type StoryblokStory = z.infer<typeof StorySchema>;

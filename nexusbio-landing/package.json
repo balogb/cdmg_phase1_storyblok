@@ -19,7 +19,8 @@
     "sharp": "^0.34.5",
     "storyblok-js-client": "^7.2.2",
     "storyblok-rich-text-react-renderer": "^3.0.1",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

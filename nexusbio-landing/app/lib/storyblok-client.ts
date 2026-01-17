@@ -54,8 +54,15 @@ class RateLimiter {
   }
 }
 
+import {
+  GlobalSettingsSchema,
+  StorySchema,
+  GlobalSettingsStoryblok,
+  StoryblokStory,
+} from "@/app/types/storyblok";
+
 // Helper to fetch global settings
-export async function getGlobalSettings(isDraft: boolean = false) {
+export async function getGlobalSettings(isDraft: boolean = false): Promise<GlobalSettingsStoryblok | null> {
   try {
     const { data } = await rateLimiter.execute(() =>
       storyblokClient.get(`cdn/stories/settings`, {
@@ -63,7 +70,14 @@ export async function getGlobalSettings(isDraft: boolean = false) {
         cv: Date.now(),
       })
     );
-    return data.story.content;
+
+    const validation = GlobalSettingsSchema.safeParse(data.story.content);
+    if (!validation.success) {
+      console.error("❌ Global Settings Validation Failed:", validation.error.format());
+      return data.story.content; // Fallback to raw data in guest mode or production? 
+      // For POC, we'll return raw data but log the error.
+    }
+    return validation.data;
   } catch (error) {
     console.error("Error fetching global settings:", error);
     return null;
@@ -73,7 +87,7 @@ export async function getGlobalSettings(isDraft: boolean = false) {
 export const rateLimiter = new RateLimiter();
 
 // Type-safe story fetching with caching
-export async function getStoryBySlug(slug: string, isDraft: boolean = false) {
+export async function getStoryBySlug(slug: string, isDraft: boolean = false): Promise<StoryblokStory> {
   try {
     const { data } = await rateLimiter.execute(() =>
       storyblokClient.get(`cdn/stories/${slug}`, {
@@ -83,7 +97,15 @@ export async function getStoryBySlug(slug: string, isDraft: boolean = false) {
       })
     );
 
-    return data.story;
+    const validation = StorySchema.safeParse(data.story);
+    if (!validation.success) {
+      console.warn(`⚠️ Story Validation Warning (${slug}):`, JSON.stringify(validation.error.format(), null, 2));
+      // We still return the story to avoid crashing the whole page if one block is slightly off,
+      // but the console will definitively show the issue.
+      return data.story as StoryblokStory;
+    }
+
+    return validation.data;
   } catch (error) {
     console.error(`Error fetching story: ${slug}`, error);
     throw error;
