@@ -193,7 +193,7 @@ async function createHomeStory() {
       });
       console.log("✅ Home story created and published!");
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("❌ Failed to build home story:", error.response?.data || error.message);
   }
 }

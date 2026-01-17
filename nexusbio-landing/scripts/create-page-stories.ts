@@ -100,7 +100,7 @@ async function createPages() {
         });
       }
       console.log(`✅ ${page.name} ready!`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`❌ Failed ${page.name}:`, error.response?.data || error.message);
     }
   }

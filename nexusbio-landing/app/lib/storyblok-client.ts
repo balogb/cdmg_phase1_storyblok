@@ -17,7 +17,7 @@ export const storyblokManagementClient = new StoryblokClient({
 
 // Rate Limiter class to handle Storyblok quota limits
 class RateLimiter {
-  private queue: Array<() => Promise<any>> = [];
+  private queue: Array<() => Promise<unknown>> = [];
   private processing = false;
   private requestsPerSecond = 3; // Standard free tier limit (adjust to 6 for paid)
   private requestInterval = 1000 / this.requestsPerSecond;

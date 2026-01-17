@@ -2,10 +2,10 @@ import { z } from "zod";
 
 // --- Base Schemas ---
 
-export const StoryblokAssetSchema = z.object({
+export const StoryblokAssetSchema = z.preprocess((val) => val === null ? undefined : val, z.object({
   filename: z.string(),
   alt: z.string().optional(),
-});
+}).optional());
 
 export const StoryblokLinkSchema = z.object({
   cached_url: z.string().optional(),
@@ -16,27 +16,27 @@ export const StoryblokLinkSchema = z.object({
 interface StoryblokRichTextNode {
   type: string;
   content?: StoryblokRichTextNode[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const StoryblokRichtextSchema: z.ZodType<StoryblokRichTextNode> = z.lazy(() =>
   z.object({
     type: z.string(),
     content: z.array(StoryblokRichtextSchema).optional(),
-  }).catchall(z.any())
+  }).catchall(z.unknown())
 );
 
 // --- Component Schemas ---
 
 export const HeroSectionSchema = z.object({
   component: z.literal("hero_section"),
-  logo: StoryblokAssetSchema.optional().nullable(),
+  logo: StoryblokAssetSchema,
   headline: z.string().min(1, "Headline is required"),
   subheadline: z.string().min(1, "Subheadline is required"),
   cta_text: z.string().default("Learn More"),
   cta_link: StoryblokLinkSchema,
-  background_image: StoryblokAssetSchema.optional().nullable(),
-  legal_disclaimer: z.any().optional(), // Richtext
+  background_image: StoryblokAssetSchema,
+  legal_disclaimer: StoryblokRichtextSchema.optional(), // Richtext
   show_trial_badge: z.boolean().default(false),
   variant: z.enum(["control", "variant_b"]).default("control"),
   _uid: z.string(),
@@ -44,7 +44,7 @@ export const HeroSectionSchema = z.object({
 
 export const FeatureBlockSchema = z.object({
   component: z.literal("feature_block"),
-  icon: StoryblokAssetSchema.optional().nullable(),
+  icon: StoryblokAssetSchema,
   title: z.string().min(1),
   description: z.string().min(1),
   citation: z.string().optional(),
@@ -118,9 +118,9 @@ export const NavItemSchema = z.object({
 
 export const GlobalSettingsSchema = z.object({
   component: z.literal("global_settings"),
-  logo: StoryblokAssetSchema.optional().nullable(),
+  logo: StoryblokAssetSchema,
   navigation: z.array(NavItemSchema).default([]),
-  footer_text: z.any().optional(), // Richtext
+  footer_text: StoryblokRichtextSchema.optional(), // Richtext
   contact_email: z.string().optional().nullable(),
   copyright: z.string().optional().nullable(),
   _uid: z.string(),
@@ -139,7 +139,7 @@ export const PageSchema = z.object({
   ).default([]),
   seo_title: z.string().max(60).optional().default("NexusBio Therapeutics"),
   seo_description: z.string().max(160).optional().default("Advancing oncology therapeutics."),
-  og_image: StoryblokAssetSchema.optional().nullable(),
+  og_image: StoryblokAssetSchema,
   _uid: z.string(),
 });
 

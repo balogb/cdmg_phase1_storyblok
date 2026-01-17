@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const richtextOptions = {
   markResolvers: {
-    [MARK_LINK]: (children: any, props: any) => {
+    [MARK_LINK]: (children: React.ReactNode, props: { linktype?: string; href?: string; target?: string }) => {
       const { linktype, href, target } = props;
       if (linktype === "email") {
         return <a href={`mailto:${href}`}>{children}</a>;

@@ -462,11 +462,13 @@ const components = [
 async function createComponent(component: typeof components[0]) {
   try {
     // Check if component exists
-    const existingComponents = await client.get(`spaces/${SPACE_ID}/components/`);
-    const existing = existingComponents.data.components.find((c: any) => c.name === component.name);
+    // @ts-ignore - Storyblok Management API types are inconsistent
+    const existingComponents = (await client.get(`spaces/${SPACE_ID}/components/`)) as any;
+    const existing = existingComponents.data.components.find((c: { name: string; id: number }) => c.name === component.name);
 
     if (existing) {
       console.log(`🔄 Updating: ${component.display_name} (ID: ${existing.id})...`);
+      // @ts-ignore
       await client.put(`spaces/${SPACE_ID}/components/${existing.id}`, {
         component: { ...component, id: existing.id },
       });
@@ -474,13 +476,16 @@ async function createComponent(component: typeof components[0]) {
       return existing;
     }
 
-    const response = await client.post(`spaces/${SPACE_ID}/components/`, {
+    // @ts-ignore
+    const response = (await client.post(`spaces/${SPACE_ID}/components/`, {
       component,
-    });
+    })) as any;
     console.log(`✅ Created: ${component.display_name}`);
     return response.data;
-  } catch (error: any) {
-    console.error(`❌ Failed: ${component.display_name}`, error.response?.data || error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorData = (error as { response?: { data?: unknown } })?.response?.data;
+    console.error(`❌ Failed: ${component.display_name}`, errorData || errorMessage);
     throw error;
   }
 }

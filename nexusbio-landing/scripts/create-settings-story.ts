@@ -102,7 +102,7 @@ async function createSettingsStory() {
       });
       console.log("✅ Settings story created and published!");
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("❌ Failed to build settings story:", error.response?.data || error.message);
   }
 }

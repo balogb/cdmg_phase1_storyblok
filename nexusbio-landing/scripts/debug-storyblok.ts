@@ -36,7 +36,7 @@ async function debugFetch() {
     
     console.log("Story ID:", publishedData.story.id);
     console.log("Last Published At:", publishedData.story.published_at);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Fetch failed:", error.message);
   }
 }

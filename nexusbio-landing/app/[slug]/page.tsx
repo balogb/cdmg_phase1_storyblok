@@ -38,14 +38,17 @@ export async function generateMetadata({
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
+  const { isEnabled } = await draftMode();
+  let story;
+  
   try {
-    const { isEnabled } = await draftMode();
-    const story = await getStoryBySlug(slug, isEnabled);
-
-    return <StoryblokStory story={story} />;
-  } catch {
+    story = await getStoryBySlug(slug, isEnabled);
+  } catch (error) {
+    console.error(`Story not found for slug: ${slug}`, error);
     notFound();
   }
+
+  return <StoryblokStory story={story} />;
 }
 
 export const revalidate = 60;

@@ -37,12 +37,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  try {
-    const { isEnabled } = await draftMode();
-    const story = await getStoryBySlug("home", isEnabled);
+  const { isEnabled } = await draftMode();
+  let story;
 
-    return <StoryblokStory story={story} />;
-  } catch {
+  try {
+    story = await getStoryBySlug("home", isEnabled);
+  } catch (error) {
+    console.warn("Home story not found, showing setup instructions.", error);
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center max-w-lg px-4">
@@ -67,6 +68,8 @@ export default async function HomePage() {
       </div>
     );
   }
+
+  return <StoryblokStory story={story} />;
 }
 
 // Enable ISR with 60-second revalidation
