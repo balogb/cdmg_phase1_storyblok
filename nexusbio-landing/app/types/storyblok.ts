@@ -22,6 +22,7 @@ export type StoryblokRichtext = {
 // Hero Section
 export interface HeroSectionStoryblok extends SbBlokData {
   component: "hero_section";
+  logo?: StoryblokAsset;
   headline: string;
   subheadline: string;
   cta_text: string;

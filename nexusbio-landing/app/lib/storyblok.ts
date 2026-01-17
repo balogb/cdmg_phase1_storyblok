@@ -31,7 +31,7 @@ export function initStoryblok() {
     use: [apiPlugin],
     components,
     apiOptions: {
-      region: "us", // Change to "eu" if using EU data center
+      region: "eu", // Default region for most spaces
     },
   });
 }
