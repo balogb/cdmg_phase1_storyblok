@@ -1,0 +1,55 @@
+[
+  {
+    "name": "hero_section",
+    "role": "High-impact page header. Used for value propositions and A/B testing.",
+    "fields": {
+      "headline": {
+        "semantic": "hero_headline",
+        "limit": 120,
+        "guide": "Impactful oncology-focused value prop"
+      },
+      "subheadline": {
+        "semantic": "hero_subheadline",
+        "limit": 250,
+        "guide": "Primary ad copy source for Meta/Google"
+      },
+      "cta_text": {
+        "semantic": "cta",
+        "limit": 30,
+        "guide": "Action-oriented button text"
+      }
+    }
+  },
+  {
+    "name": "feature_block",
+    "role": "Individual feature/benefit unit. Summarizes technical or clinical advantages.",
+    "fields": {
+      "title": {
+        "semantic": "feature_title",
+        "limit": 80,
+        "guide": "Concise, active voice"
+      },
+      "description": {
+        "semantic": "feature_description",
+        "limit": 300,
+        "guide": "Focus on patient outcomes"
+      }
+    }
+  },
+  {
+    "name": "stat_block",
+    "role": "Quantitative clinical data point. Used for regulatory or scientific proof.",
+    "fields": {
+      "metric": {
+        "semantic": "metric_value",
+        "limit": 20,
+        "guide": "E.g., '47%', '12.4 months'"
+      },
+      "metric_label": {
+        "semantic": "metric_label",
+        "limit": 60,
+        "guide": "What the metric represents"
+      }
+    }
+  }
+]

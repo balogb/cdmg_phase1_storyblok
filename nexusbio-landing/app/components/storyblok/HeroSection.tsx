@@ -3,6 +3,7 @@ import { HeroSectionStoryblok } from "@/app/types/storyblok";
 import { render, MARK_LINK } from "storyblok-rich-text-react-renderer";
 import Image from "next/image";
 import Link from "next/link";
+import storyblokLoader from "@/app/lib/storyblok-loader";
 
 const richtextOptions = {
   markResolvers: {
@@ -37,6 +38,7 @@ export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
       {blok.background_image?.filename && (
         <div className="absolute inset-0 z-0">
           <Image
+            loader={storyblokLoader}
             src={blok.background_image.filename}
             alt={blok.background_image.alt || ""}
             fill
@@ -60,6 +62,7 @@ export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
           {blok.logo?.filename && (
             <div className={`mb-8 flex ${isVariantB ? "justify-start" : "justify-center"}`}>
               <Image
+                loader={storyblokLoader}
                 src={blok.logo.filename}
                 alt={blok.logo.alt || "NexusBio Logo"}
                 width={180}
