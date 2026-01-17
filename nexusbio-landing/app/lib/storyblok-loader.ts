@@ -9,8 +9,12 @@ export default function storyblokLoader({ src, width, quality }: { src: string; 
   
   // We use the /m/ path to trigger the image service
   const imageService = "/m/";
-  const resize = `${width}x0`; // 0 for automatic aspect ratio height
-  const filters = quality ? `/filters:quality(${quality}):format(webp)` : "/filters:format(webp)";
+  const resize = width > 0 ? `${width}x0` : ""; // 0 width for original width if needed
+  
+  // For print, we avoid WebP and use higher quality or original format
+  const isPrint = quality === 100;
+  const format = isPrint ? "" : ":format(webp)";
+  const filters = quality ? `/filters:quality(${quality})${format}` : `/filters${format}`;
 
   return `${src}${imageService}${resize}${filters}`;
 }

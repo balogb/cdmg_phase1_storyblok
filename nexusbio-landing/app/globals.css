@@ -44,3 +44,72 @@ body {
   outline: 3px solid #60a5fa;
   outline-offset: 2px;
 }
+
+/* Print Styles */
+@media print {
+  /* Hide non-printable elements */
+  header, 
+  nav, 
+  footer, 
+  .skip-link, 
+  button, 
+  .cta-button,
+  [role="button"],
+  .animate-bounce,
+  .scroll-indicator {
+    display: none !important;
+  }
+
+  /* Reset main padding/margin for print */
+  main {
+    padding-top: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force background colors and images */
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure text is high contrast */
+  h1, h2, h3, h4, h5, h6, p, li, span {
+    color: black !important;
+  }
+
+  /* Page breaks for sections */
+  section {
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+    min-height: auto !important;
+  }
+
+  /* Hero Section Special Handling */
+  .print-hero {
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  /* Ensure images print well */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Utility classes for manual page breaks */
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Remove link URLs in print to keep it clean like a pamphlet */
+  a:after {
+    content: "" !important;
+  }
+}

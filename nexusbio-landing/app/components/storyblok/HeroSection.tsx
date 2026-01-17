@@ -1,3 +1,4 @@
+"use client";
 import { storyblokEditable } from "@storyblok/react/rsc";
 import { HeroSectionStoryblok } from "@/app/types/storyblok";
 import { render, MARK_LINK } from "storyblok-rich-text-react-renderer";
@@ -107,7 +108,7 @@ export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce print:hidden">
         <svg
           className="w-6 h-6 text-white"
           fill="none"

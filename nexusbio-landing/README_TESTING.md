@@ -38,3 +38,24 @@ When you or an AI agent makes changes in Storyblok:
 If you are using an AI agent to update content, you can "wrap" the process by instructing the agent to run these scripts after every major content update. For example:
 
 > "Update the Hero Section headline in Storyblok, then run `npm run audit:responsive` to verify it doesn't cause overflow on mobile."
+
+---
+
+## Print / Pamphlet Output
+
+The landing page is optimized for high-quality print output.
+
+### 1. High-Resolution Assets
+The `storyblok-loader` has been updated to handle print-quality request. While browsing the web, images are served as WebP for performance. For print, the layout ensures sharp rendering.
+
+### 2. Print Styles (`@media print`)
+We use specific CSS to ensure the landing page looks like a professional pamphlet when printed:
+- **Hidden Elements**: Navigation, CTAs, and animations are hidden.
+- **Page Breaks**: Each major section (Hero, Science, Data) starts on a new page.
+- **Color Preservation**: Branding colors are preserved where possible.
+
+### 3. How to Verify Print
+- Open the page in Chrome/Safari/Edge.
+- Press `Cmd + P` (Mac) or `Ctrl + P` (Windows).
+- Ensure "Background Graphics" is enabled in the print settings.
+- Review the preview to ensure content is logically grouped on pages and no web-only junk (like buttons) is visible.
