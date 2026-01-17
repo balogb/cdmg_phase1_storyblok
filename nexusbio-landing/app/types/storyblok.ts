@@ -31,9 +31,9 @@ export const StoryblokRichtextSchema: z.ZodType<StoryblokRichTextNode> = z.lazy(
 export const HeroSectionSchema = z.object({
   component: z.literal("hero_section"),
   logo: StoryblokAssetSchema,
-  headline: z.string().min(1, "Headline is required"),
-  subheadline: z.string().min(1, "Subheadline is required"),
-  cta_text: z.string().default("Learn More"),
+  headline: z.string().min(1, "Headline is required").max(120),
+  subheadline: z.string().min(1, "Subheadline is required").max(250),
+  cta_text: z.string().max(30).default("Learn More"),
   cta_link: StoryblokLinkSchema,
   background_image: StoryblokAssetSchema,
   legal_disclaimer: StoryblokRichtextSchema.optional(), // Richtext
@@ -45,25 +45,25 @@ export const HeroSectionSchema = z.object({
 export const FeatureBlockSchema = z.object({
   component: z.literal("feature_block"),
   icon: StoryblokAssetSchema,
-  title: z.string().min(1),
-  description: z.string().min(1),
-  citation: z.string().optional(),
+  title: z.string().min(1).max(80),
+  description: z.string().min(1).max(300),
+  citation: z.string().max(100).optional(),
   _uid: z.string(),
 });
 
 export const FeaturesSectionSchema = z.object({
   component: z.literal("features_section"),
-  section_title: z.string().min(1),
-  section_subtitle: z.string().optional(),
+  section_title: z.string().min(1).max(100),
+  section_subtitle: z.string().max(200).optional(),
   features: z.array(FeatureBlockSchema).default([]),
   _uid: z.string(),
 });
 
 export const StatBlockSchema = z.object({
   component: z.literal("stat_block"),
-  metric: z.string().min(1),
-  metric_label: z.string().min(1),
-  context: z.string().optional(),
+  metric: z.string().min(1).max(20),
+  metric_label: z.string().min(1).max(60),
+  context: z.string().max(150).optional(),
   _uid: z.string(),
 });
 

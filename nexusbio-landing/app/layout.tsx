@@ -28,8 +28,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         {settings && <Header settings={settings} />}
-        <main className="pt-20">
+        <main id="main-content" className="pt-20">
           {children}
         </main>
         {settings && <Footer settings={settings} />}

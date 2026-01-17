@@ -161,14 +161,14 @@ const components = [
         type: "text",
         required: true,
         max_length: 80,
-        description: "SEMANTIC:feature_title - Feature headline (will use in Google Search Ads)",
+        description: "SEMANTIC:feature_title - Feature headline (AI-GUIDE: Concise, active voice, 80 chars max)",
         display_name: "Title",
       },
       description: {
         type: "textarea",
         required: true,
         max_length: 300,
-        description: "SEMANTIC:feature_description - Detailed explanation (source for platform variations)",
+        description: "SEMANTIC:feature_description - Detailed explanation (AI-GUIDE: Focus on patient outcomes or technical advantages, 300 chars max)",
         display_name: "Description",
       },
       citation: {
@@ -225,14 +225,14 @@ const components = [
         type: "text",
         required: true,
         max_length: 120,
-        description: "SEMANTIC:headline - Primary headline for page (optimized for SEO and ad platforms)",
+        description: "SEMANTIC:hero_headline - Primary SEO-optimized headline (AI-GUIDE: Impactful oncology-focused value prop, 120 chars max)",
         display_name: "Headline",
       },
       subheadline: {
         type: "textarea",
         required: true,
         max_length: 250,
-        description: "SEMANTIC:subheadline - Supporting description (will transform to Meta ad primary text)",
+        description: "SEMANTIC:hero_subheadline - Supporting description (AI-GUIDE: Primary ad copy source for Meta/Google, 250 chars max)",
         display_name: "Subheadline",
       },
       cta_text: {
