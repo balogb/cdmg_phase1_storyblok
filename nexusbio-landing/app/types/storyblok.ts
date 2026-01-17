@@ -150,6 +150,8 @@ export const StorySchema = z.object({
   slug: z.string(),
   full_slug: z.string(),
   content: PageSchema,
+  tag_list: z.array(z.string()).default([]),
+  workflow_step_id: z.number().optional().nullable(),
   created_at: z.string(),
   published_at: z.string().nullable(),
   first_published_at: z.string().nullable(),

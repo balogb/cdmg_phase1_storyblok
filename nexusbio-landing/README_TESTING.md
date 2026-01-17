@@ -59,3 +59,30 @@ We use specific CSS to ensure the landing page looks like a professional pamphle
 - Press `Cmd + P` (Mac) or `Ctrl + P` (Windows).
 - Ensure "Background Graphics" is enabled in the print settings.
 - Review the preview to ensure content is logically grouped on pages and no web-only junk (like buttons) is visible.
+
+---
+
+## Workflow Integration (CDMG Best Practice)
+
+This project is prepared for Storyblok's workflow/approval stages.
+
+### 1. Stage-Aware Previews
+When viewing a page in the Storyblok Visual Editor, a **Workflow Banner** appears at the bottom right.
+- It displays the current stage (e.g., "Draft", "Ready to Publish").
+- It highlights critical tags like `Legal Approved`.
+- **Purpose**: Prevents accidental publishing or review of incomplete content.
+
+### 2. Automated Guardrails (Webhooks)
+For enterprise-grade compliance, we recommend connecting Storyblok Webhooks to our audit scripts.
+- **Reference Script**: See `scripts/webhook-verify.ts`.
+- **The "Golden Path"**:
+    1. AI/Editor updates content.
+    2. Workflow moves to "Ready for Review".
+    3. Storyblok triggers a webhook to your server.
+    4. Your server runs `npm run audit:responsive` and `npm run audit:a11y`.
+    5. If audits fail, the content is automatically flagged or moved back to "Draft".
+
+### 3. How to Verify Workflows
+1. Open a story in Storyblok.
+2. Change the Workflow Stage.
+3. Observe the `WorkflowBanner` update in the preview (real-time).

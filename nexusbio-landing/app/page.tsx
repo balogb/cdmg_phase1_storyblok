@@ -2,6 +2,7 @@ import { getStoryBySlug } from "@/app/lib/storyblok-client";
 import { StoryblokStory } from "@storyblok/react/rsc";
 import { Metadata } from "next";
 import { draftMode } from "next/headers";
+import WorkflowBanner from "@/app/components/layout/WorkflowBanner";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -69,7 +70,15 @@ export default async function HomePage() {
     );
   }
 
-  return <StoryblokStory story={story} />;
+  return (
+    <>
+      <WorkflowBanner 
+        workflowStepId={story.workflow_step_id} 
+        tagList={story.tag_list} 
+      />
+      <StoryblokStory story={story} />
+    </>
+  );
 }
 
 // Enable ISR with 60-second revalidation
