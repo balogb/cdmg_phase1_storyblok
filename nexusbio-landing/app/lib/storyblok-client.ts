@@ -15,41 +15,77 @@ export const storyblokManagementClient = new StoryblokClient({
   oauthToken: process.env.STORYBLOK_MANAGEMENT_TOKEN!,
 });
 
+// Rate Limiter class to handle Storyblok quota limits
+class RateLimiter {
+  private queue: Array<() => Promise<any>> = [];
+  private processing = false;
+  private requestsPerSecond = 3; // Standard free tier limit (adjust to 6 for paid)
+  private requestInterval = 1000 / this.requestsPerSecond;
+
+  async execute<T>(request: () => Promise<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.queue.push(async () => {
+        try {
+          const result = await request();
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      });
+
+      if (!this.processing) {
+        this.processQueue();
+      }
+    });
+  }
+
+  private async processQueue() {
+    this.processing = true;
+
+    while (this.queue.length > 0) {
+      const request = this.queue.shift();
+      if (request) {
+        await request();
+        await new Promise((resolve) => setTimeout(resolve, this.requestInterval));
+      }
+    }
+
+    this.processing = false;
+  }
+}
+
+// Helper to fetch global settings
+export async function getGlobalSettings(isDraft: boolean = false) {
+  try {
+    const { data } = await rateLimiter.execute(() =>
+      storyblokClient.get(`cdn/stories/settings`, {
+        version: isDraft ? "draft" : "published",
+        cv: Date.now(),
+      })
+    );
+    return data.story.content;
+  } catch (error) {
+    console.error("Error fetching global settings:", error);
+    return null;
+  }
+}
+
+export const rateLimiter = new RateLimiter();
+
 // Type-safe story fetching with caching
 export async function getStoryBySlug(slug: string, isDraft: boolean = false) {
   try {
-    const { data } = await storyblokClient.get(`cdn/stories/${slug}`, {
-      version: isDraft ? "draft" : "published",
-      resolve_relations: [],
-      cv: Date.now(), // Cache busting for development
-    });
+    const { data } = await rateLimiter.execute(() =>
+      storyblokClient.get(`cdn/stories/${slug}`, {
+        version: isDraft ? "draft" : "published",
+        resolve_relations: [],
+        cv: Date.now(),
+      })
+    );
 
     return data.story;
   } catch (error) {
     console.error(`Error fetching story: ${slug}`, error);
     throw error;
   }
-}
-
-// Rate limit monitoring
-let requestCount = 0;
-let requestWindow = Date.now();
-
-export function checkRateLimit() {
-  const now = Date.now();
-  if (now - requestWindow > 1000) {
-    // Reset every second
-    requestCount = 0;
-    requestWindow = now;
-  }
-
-  requestCount++;
-
-  if (requestCount > 6) {
-    console.warn(
-      "⚠️ BLOCKER: Approaching Storyblok rate limit (6 req/sec on paid plans)"
-    );
-  }
-
-  return { count: requestCount, limit: 6 };
 }

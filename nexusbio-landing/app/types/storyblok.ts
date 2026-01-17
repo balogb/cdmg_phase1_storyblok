@@ -28,8 +28,9 @@ export interface HeroSectionStoryblok extends SbBlokData {
   cta_text: string;
   cta_link: StoryblokLink;
   background_image?: StoryblokAsset;
-  legal_disclaimer: StoryblokRichtext;
+  legal_disclaimer: any; // Richtext type
   show_trial_badge: boolean;
+  variant?: "control" | "variant_b";
 }
 
 // Feature Block
@@ -97,6 +98,30 @@ export interface FooterSectionStoryblok extends SbBlokData {
   legal_links: FooterLinkStoryblok[];
   compliance_notice: StoryblokRichtext;
   contact_email?: string;
+}
+
+// Nav Item
+export interface NavItemStoryblok extends SbBlokData {
+  component: "nav_item";
+  label: string;
+  link: {
+    url: string;
+    linktype: string;
+    cached_url: string;
+  };
+}
+
+// Global Settings
+export interface GlobalSettingsStoryblok extends SbBlokData {
+  component: "global_settings";
+  logo?: {
+    filename: string;
+    alt?: string;
+  };
+  navigation?: NavItemStoryblok[];
+  footer_text?: any; // Richtext
+  contact_email?: string;
+  copyright?: string;
 }
 
 // Page (Root)

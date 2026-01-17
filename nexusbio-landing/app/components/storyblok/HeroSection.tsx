@@ -1,10 +1,33 @@
 import { storyblokEditable } from "@storyblok/react/rsc";
 import { HeroSectionStoryblok } from "@/app/types/storyblok";
-import { render } from "storyblok-rich-text-react-renderer";
+import { render, MARK_LINK } from "storyblok-rich-text-react-renderer";
 import Image from "next/image";
 import Link from "next/link";
 
+const richtextOptions = {
+  markResolvers: {
+    [MARK_LINK]: (children: any, props: any) => {
+      const { linktype, href, target } = props;
+      if (linktype === "email") {
+        return <a href={`mailto:${href}`}>{children}</a>;
+      }
+      return (
+        <a
+          href={href}
+          target={target || "_self"}
+          rel={target === "_blank" ? "noopener noreferrer" : undefined}
+          className="text-blue-400 hover:text-blue-300 underline"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
+
 export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
+  const isVariantB = blok.variant === "variant_b";
+
   return (
     <section
       {...storyblokEditable(blok)}
@@ -30,51 +53,54 @@ export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-900 to-blue-700" />
       )}
 
-      {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        {/* Company Logo */}
-        {blok.logo?.filename && (
-          <div className="mb-8 flex justify-center">
-            <Image
-              src={blok.logo.filename}
-              alt={blok.logo.alt || "NexusBio Logo"}
-              width={180}
-              height={48}
-              className="h-12 w-auto object-contain"
-            />
-          </div>
-        )}
-        {/* Phase 3 Badge */}
-        {blok.show_trial_badge && (
-          <div className="inline-flex items-center px-4 py-2 mb-6 bg-blue-600 rounded-full text-sm font-semibold">
-            Phase 3 Clinical Trial
-          </div>
-        )}
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+        <div className={`${isVariantB ? "text-left max-w-2xl" : "text-center mx-auto"}`}>
+          {/* Company Logo */}
+          {blok.logo?.filename && (
+            <div className={`mb-8 flex ${isVariantB ? "justify-start" : "justify-center"}`}>
+              <Image
+                src={blok.logo.filename}
+                alt={blok.logo.alt || "NexusBio Logo"}
+                width={180}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+          )}
 
-        {/* Headline */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-          {blok.headline}
-        </h1>
+          {/* Phase 3 Badge */}
+          {blok.show_trial_badge && (
+            <div className="inline-flex items-center px-4 py-2 mb-6 bg-blue-600 rounded-full text-sm font-semibold">
+              Phase 3 Clinical Trial
+            </div>
+          )}
 
-        {/* Subheadline */}
-        <p className="text-xl md:text-2xl mb-8 text-gray-200">
-          {blok.subheadline}
-        </p>
+          {/* Headline */}
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
+            {blok.headline}
+          </h1>
 
-        {/* CTA */}
-        <Link
-          href={blok.cta_link?.cached_url || "#"}
-          className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-lg"
-        >
-          {blok.cta_text}
-        </Link>
+          {/* Subheadline */}
+          <p className="text-xl md:text-2xl mb-8 text-gray-200">
+            {blok.subheadline}
+          </p>
 
-        {/* Legal Disclaimer */}
-        {blok.legal_disclaimer && (
-          <div className="mt-12 max-w-3xl mx-auto text-xs text-gray-300 leading-relaxed">
-            {render(blok.legal_disclaimer as Parameters<typeof render>[0])}
-          </div>
-        )}
+          {/* CTA */}
+          <Link
+            href={blok.cta_link?.cached_url || "#"}
+            className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-lg"
+          >
+            {blok.cta_text}
+          </Link>
+
+          {/* Legal Disclaimer */}
+          {blok.legal_disclaimer && (
+            <div className={`mt-12 text-xs text-gray-300 leading-relaxed ${isVariantB ? "max-w-xl" : "max-w-3xl mx-auto"}`}>
+              {render(blok.legal_disclaimer, richtextOptions)}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Scroll Indicator */}

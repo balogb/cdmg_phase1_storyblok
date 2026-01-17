@@ -42,3 +42,6 @@ next-env.d.ts
 
 # storyblok generated types
 storyblok-component-types.d.ts
+
+# POC spec
+STORYBLOK_PHASE1_SPEC.md

@@ -19,6 +19,13 @@ export async function generateMetadata(): Promise<Metadata> {
         images: story.content.og_image
           ? [{ url: story.content.og_image.filename }]
           : [],
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: story.content.seo_title,
+        description: story.content.seo_description,
+        images: story.content.og_image ? [story.content.og_image.filename] : [],
       },
     };
   } catch {

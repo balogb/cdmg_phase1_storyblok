@@ -22,6 +22,68 @@ const client = new StoryblokClient({
 });
 
 const components = [
+  // 0. Nav Item (nested, no dependencies)
+  {
+    name: "nav_item",
+    display_name: "Navigation Item",
+    schema: {
+      label: {
+        type: "text",
+        required: true,
+        description: "SEMANTIC:link_text - Label for the navigation link",
+        display_name: "Label",
+      },
+      link: {
+        type: "multilink",
+        required: true,
+        description: "SEMANTIC:link_url - Target URL for the navigation link",
+        display_name: "Link",
+      },
+    },
+    is_root: false,
+    is_nestable: true,
+    color: "#1b98e0",
+  },
+
+  // 0.1 Global Settings
+  {
+    name: "global_settings",
+    display_name: "Global Settings",
+    schema: {
+      logo: {
+        type: "asset",
+        filetypes: ["images"],
+        description: "SEMANTIC:logo - Site-wide company logo",
+        display_name: "Logo",
+      },
+      navigation: {
+        type: "bloks",
+        restrict_components: true,
+        component_whitelist: ["nav_item"],
+        description: "SEMANTIC:navigation - Main header navigation links",
+        display_name: "Header Navigation",
+      },
+      footer_text: {
+        type: "richtext",
+        description: "SEMANTIC:footer_about - Brief about text for the footer",
+        display_name: "Footer About Text",
+      },
+      contact_email: {
+        type: "text",
+        description: "SEMANTIC:contact_email - Global contact email address",
+        display_name: "Contact Email",
+      },
+      copyright: {
+        type: "text",
+        description: "SEMANTIC:copyright - Copyright notice text",
+        display_name: "Copyright Text",
+      },
+    },
+    is_root: true,
+    is_nestable: false,
+    color: "#78909c",
+  },
+
   // 1. Footer Link (nested, no dependencies)
   {
     name: "footer_link",
@@ -203,6 +265,16 @@ const components = [
         default_value: true,
         description: "SEMANTIC:trial_badge - Display Phase 3 status badge",
         display_name: "Show Phase 3 Badge",
+      },
+      variant: {
+        type: "option",
+        options: [
+          { name: "Control (Centered)", value: "control" },
+          { name: "Variant B (Left Aligned)", value: "variant_b" },
+        ],
+        default_value: "control",
+        description: "SEMANTIC:experiment_variant - Component variant for A/B testing",
+        display_name: "A/B Test Variant",
       },
     },
     is_root: false,
