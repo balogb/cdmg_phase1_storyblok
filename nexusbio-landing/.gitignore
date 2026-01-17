@@ -45,3 +45,7 @@ storyblok-component-types.d.ts
 
 # POC spec
 STORYBLOK_PHASE1_SPEC.md
+POC_ENHANCEMENTS_GUIDE.md
+
+# test results
+/test-results/
