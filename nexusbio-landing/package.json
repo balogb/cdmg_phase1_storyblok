@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "audit:a11y": "npx tsx scripts/audit-accessibility.ts",
+    "audit:responsive": "npx tsx scripts/audit-responsive.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
