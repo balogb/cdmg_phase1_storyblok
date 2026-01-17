@@ -86,3 +86,26 @@ For enterprise-grade compliance, we recommend connecting Storyblok Webhooks to o
 1. Open a story in Storyblok.
 2. Change the Workflow Stage.
 3. Observe the `WorkflowBanner` update in the preview (real-time).
+
+---
+
+## CI/CD & Deployment Guardrails
+
+This project uses **GitHub Actions** to automate quality checks and deployments.
+
+### 1. Continuous Integration (`ci.yml`)
+Runs on every push or pull request to `main` or `staging`.
+- **Validation**: Checks for linting errors and TypeScript type safety.
+- **Automated Audits**: Runs the `audit:responsive` and `audit:a11y` scripts in a headless environment.
+- **Artifacts**: Screenshots of any detected layout failures are uploaded as GitHub Action artifacts for visual debugging.
+
+### 2. Deployment Scaffolding (`deploy.yml`)
+Handles automated deployments to multiple environments.
+- **Staging**: Deploys when code is merged into the `staging` branch.
+- **Production**: Deploys when code is merged into the `main` branch.
+
+### 3. Required Secrets
+To enable the CI/CD pipeline, ensure the following secrets are configured in your GitHub repository:
+- `NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN`
+- `STORYBLOK_MANAGEMENT_TOKEN`
+- (Optional) `VERCEL_TOKEN` / `AWS_ACCESS_KEY` for physical deployments.

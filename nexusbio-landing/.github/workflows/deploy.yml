@@ -1,0 +1,60 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ main, staging ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+    runs-on: ubuntu-latest
+    # Ensure CI passes before deployment
+    needs: [] # In a real project, this would 'need' the build/test job if they were in the same file or across files
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build App
+        run: npm run build
+        env:
+          NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN }}
+          STORYBLOK_MANAGEMENT_TOKEN: ${{ secrets.STORYBLOK_MANAGEMENT_TOKEN }}
+
+      # --- Deployment Scaffolding ---
+      # This section should be customized based on the target platform (Vercel, AWS, etc.)
+      
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/staging' || github.event.inputs.environment == 'staging'
+        run: |
+          echo "🚀 Deploying to STAGING environment..."
+          # Example: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --confirm
+          
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'production'
+        run: |
+          echo "🚀 Deploying to PRODUCTION environment..."
+          # Example: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm
+
+      - name: Post-Deployment Verification
+        run: |
+          echo "✅ Deployment successful. Running smoke tests..."

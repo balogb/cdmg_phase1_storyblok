@@ -1,0 +1,59 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, staging ]
+  pull_request:
+    branches: [ main, staging ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type Check
+        run: npx tsc --noEmit
+
+      - name: Build Next.js App
+        run: npm run build
+        env:
+          NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN }}
+          STORYBLOK_MANAGEMENT_TOKEN: ${{ secrets.STORYBLOK_MANAGEMENT_TOKEN }}
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Responsive & Accessibility Audits
+        run: |
+          # Start the app in the background
+          npm run start &
+          # Wait for the app to be ready
+          npx wait-on http://localhost:3000
+          # Run audits
+          npm run audit:responsive
+          npm run audit:a11y
+        env:
+          NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN: ${{ secrets.NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN }}
+          STORYBLOK_MANAGEMENT_TOKEN: ${{ secrets.STORYBLOK_MANAGEMENT_TOKEN }}
+
+      - name: Upload Audit Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-screenshots
+          path: test-results/responsive-screenshots/
