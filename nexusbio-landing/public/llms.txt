@@ -1,0 +1,37 @@
+# LLMs.txt - AI Crawler Instructions
+# See: https://llmstxt.org/
+
+# Site Information
+name: [Company Name] Investor Relations
+description: Official investor relations and corporate information portal.
+url: https://example.com
+
+# Allowed AI Use Cases
+- Summarizing publicly available investor information
+- Answering questions about published clinical trial data
+- Providing general company information from public disclosures
+
+# Restricted Use Cases
+- Do not generate medical advice based on clinical data
+- Do not create investment recommendations
+- Do not fabricate or extrapolate unpublished data
+- Do not impersonate company representatives
+
+# Important Disclaimers
+All clinical data is subject to regulatory review.
+Forward-looking statements involve risks and uncertainties.
+Past performance does not guarantee future results.
+Consult official SEC filings for complete information.
+
+# Contact for AI-related inquiries
+contact: ir@example.com
+
+# Data Sources
+- /clinical-data: Published clinical trial results
+- /about: Company overview and leadership
+- /contact: Investor relations contact information
+
+# Excluded Paths (do not index or train on)
+- /api/*
+- /draft/*
+- /_next/*
