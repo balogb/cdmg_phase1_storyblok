@@ -27,21 +27,26 @@ export default function Header({ settings }: { settings: GlobalSettingsStoryblok
             className="flex items-center space-x-3 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           >
             {settings.logo?.filename ? (
-              <Image
-                src={settings.logo.filename}
-                alt={settings.logo.alt || "NexusBio Logo"}
-                width={40}
-                height={40}
-                className="w-10 h-10"
-              />
+              <div className="flex items-center">
+                <Image
+                  src={settings.logo.filename}
+                  alt={settings.logo.alt || "NexusBio Logo"}
+                  width={160}
+                  height={40}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
+              </div>
             ) : (
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                N
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                  N
+                </div>
+                <span className="text-xl font-bold text-gray-900 tracking-tight">
+                  NexusBio
+                </span>
               </div>
             )}
-            <span className="text-xl font-bold text-gray-900 tracking-tight">
-              NexusBio
-            </span>
           </Link>
 
           {/* Navigation */}

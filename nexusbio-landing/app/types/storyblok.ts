@@ -36,7 +36,7 @@ export const HeroSectionSchema = z.object({
   cta_text: z.string().max(30).default("Learn More"),
   cta_link: StoryblokLinkSchema,
   background_image: StoryblokAssetSchema,
-  legal_disclaimer: StoryblokRichtextSchema.optional(), // Richtext
+  legal_disclaimer: StoryblokRichtextSchema, // Required
   show_trial_badge: z.boolean().default(false),
   variant: z.enum(["control", "variant_b"]).default("control"),
   _uid: z.string(),
@@ -55,11 +55,12 @@ export const FeaturesSectionSchema = z.object({
   component: z.literal("features_section"),
   section_title: z.string().min(1).max(100),
   section_subtitle: z.string().max(200).optional(),
-  features: z.array(FeatureBlockSchema).default([]),
+  features: z.array(FeatureBlockSchema).min(3, "Minimum 3 features required").default([]),
   _uid: z.string(),
 });
 
 export const StatBlockSchema = z.object({
+// ... (omitted for brevity, no changes needed here but context matching)
   component: z.literal("stat_block"),
   metric: z.string().min(1).max(20),
   metric_label: z.string().min(1).max(60),
@@ -77,6 +78,7 @@ export const ClinicalDataSectionSchema = z.object({
 });
 
 export const ResourceLinkSchema = z.object({
+// ...
   component: z.literal("resource_link"),
   title: z.string().min(1),
   description: z.string().optional(),
@@ -104,7 +106,7 @@ export const FooterSectionSchema = z.object({
   company_name: z.string().min(1),
   copyright_text: z.string().min(1),
   legal_links: z.array(FooterLinkSchema).default([]),
-  compliance_notice: StoryblokRichtextSchema.optional(),
+  compliance_notice: StoryblokRichtextSchema, // Required per spec
   contact_email: z.string().email().optional().or(z.literal("")),
   _uid: z.string(),
 });
@@ -137,8 +139,8 @@ export const PageSchema = z.object({
       FooterSectionSchema,
     ])
   ).default([]),
-  seo_title: z.string().max(60).optional().default("NexusBio Therapeutics"),
-  seo_description: z.string().max(160).optional().default("Advancing oncology therapeutics."),
+  seo_title: z.string().min(1, "SEO Title is required").max(60),
+  seo_description: z.string().min(1, "SEO Description is required").max(160),
   og_image: StoryblokAssetSchema,
   _uid: z.string(),
 });

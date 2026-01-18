@@ -27,6 +27,13 @@ async function createSettingsStory() {
     slug: "settings",
     content: {
       component: "global_settings",
+      logo: {
+        id: 12345,
+        alt: "NexusBio Logo",
+        filename: "https://placehold.co/160x40/transparent/0052cc?text=NexusBio",
+        name: "",
+        title: "",
+      },
       navigation: [
         {
           component: "nav_item",
@@ -102,7 +109,7 @@ async function createSettingsStory() {
       });
       console.log("✅ Settings story created and published!");
     }
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.error("❌ Failed to build settings story:", error.response?.data || error.message);
   }
 }

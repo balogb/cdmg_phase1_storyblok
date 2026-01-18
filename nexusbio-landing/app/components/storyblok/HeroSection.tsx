@@ -59,20 +59,6 @@ export default function HeroSection({ blok }: { blok: HeroSectionStoryblok }) {
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
         <div className={`${isVariantB ? "text-left max-w-2xl" : "text-center mx-auto"}`}>
-          {/* Company Logo */}
-          {blok.logo?.filename && (
-            <div className={`mb-8 flex ${isVariantB ? "justify-start" : "justify-center"}`}>
-              <Image
-                loader={storyblokLoader}
-                src={blok.logo.filename}
-                alt={blok.logo.alt || "NexusBio Logo"}
-                width={180}
-                height={48}
-                className="h-12 w-auto object-contain"
-              />
-            </div>
-          )}
-
           {/* Phase 3 Badge */}
           {blok.show_trial_badge && (
             <div className="inline-flex items-center px-4 py-2 mb-6 bg-blue-600 rounded-full text-sm font-semibold">

@@ -22,21 +22,21 @@ async function debugFetch() {
   console.log("Using Access Token:", process.env.NEXT_PUBLIC_STORYBLOK_ACCESS_TOKEN?.slice(0, 5) + "...");
   
   try {
-    const { data: publishedData } = await client.get(`cdn/stories/home`, {
-      version: "published",
-      cv: Date.now(),
-    });
-    console.log("Published Headline:", publishedData.story.content.body[0]?.headline || "N/A");
-
-    const { data: draftData } = await client.get(`cdn/stories/home`, {
+    const { data: homeData } = await client.get(`cdn/stories/home`, {
       version: "draft",
       cv: Date.now(),
     });
-    console.log("Draft Headline:", draftData.story.content.body[0]?.headline || "N/A");
-    
-    console.log("Story ID:", publishedData.story.id);
-    console.log("Last Published At:", publishedData.story.published_at);
-  } catch (error: unknown) {
+    console.log("--- HOME STORY CONTENT (Draft) ---");
+    console.log(JSON.stringify(homeData.story.content, null, 2));
+
+    const { data: settingsData } = await client.get(`cdn/stories/settings`, {
+      version: "draft",
+      cv: Date.now(),
+    });
+    console.log("--- SETTINGS STORY CONTENT (Draft) ---");
+    console.log(JSON.stringify(settingsData.story.content, null, 2));
+
+  } catch (error: any) {
     console.error("Fetch failed:", error.message);
   }
 }
