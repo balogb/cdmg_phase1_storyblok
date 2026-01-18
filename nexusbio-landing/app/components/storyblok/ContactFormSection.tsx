@@ -38,19 +38,34 @@ export default function ContactFormSection({ blok }: { blok: ContactFormSectionS
     message: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
+    setErrorMessage("");
 
     try {
-      // For POC, simulate form submission
-      // In production, replace with actual API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      console.log("Form submitted:", formData);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        setErrorMessage(result.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+
       setStatus("success");
       setFormData({ name: "", email: "", company: "", inquiry_type: "", message: "" });
     } catch {
+      setErrorMessage("Network error. Please check your connection and try again.");
       setStatus("error");
     }
   };
@@ -253,7 +268,7 @@ export default function ContactFormSection({ blok }: { blok: ContactFormSectionS
 
                 {status === "error" && (
                   <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
-                    Something went wrong. Please try again.
+                    {errorMessage || "Something went wrong. Please try again."}
                   </div>
                 )}
 
