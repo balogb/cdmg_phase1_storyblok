@@ -372,7 +372,85 @@ const components = [
     color: "#ab47bc",
   },
 
-  // 9. Footer Section (depends on footer_link)
+  // 9. Contact Form Section (no dependencies)
+  {
+    name: "contact_form_section",
+    display_name: "Contact Form Section",
+    schema: {
+      section_title: {
+        type: "text",
+        required: true,
+        max_length: 100,
+        description: "SEMANTIC:section_headline - Contact section heading",
+        display_name: "Section Title",
+      },
+      section_subtitle: {
+        type: "textarea",
+        max_length: 250,
+        description: "SEMANTIC:section_description - Optional introductory text",
+        display_name: "Section Subtitle",
+      },
+      contact_email: {
+        type: "text",
+        description: "SEMANTIC:contact_email - Display email for inquiries",
+        display_name: "Contact Email",
+      },
+      contact_phone: {
+        type: "text",
+        max_length: 30,
+        description: "SEMANTIC:contact_phone - Display phone number",
+        display_name: "Contact Phone",
+      },
+      address: {
+        type: "textarea",
+        max_length: 200,
+        description: "SEMANTIC:address - Physical address",
+        display_name: "Address",
+      },
+      additional_info: {
+        type: "richtext",
+        description: "SEMANTIC:additional_info - Additional contact information or instructions",
+        display_name: "Additional Info",
+      },
+      inquiry_types: {
+        type: "text",
+        description: "SEMANTIC:inquiry_types - Comma-separated list of inquiry types for dropdown",
+        display_name: "Inquiry Types",
+      },
+      submit_button_text: {
+        type: "text",
+        max_length: 30,
+        default_value: "Send Message",
+        description: "SEMANTIC:cta - Submit button text",
+        display_name: "Submit Button Text",
+      },
+      success_title: {
+        type: "text",
+        max_length: 60,
+        default_value: "Thank You!",
+        description: "SEMANTIC:success_title - Title shown after successful submission",
+        display_name: "Success Title",
+      },
+      success_message: {
+        type: "textarea",
+        max_length: 200,
+        default_value: "We've received your message and will get back to you shortly.",
+        description: "SEMANTIC:success_message - Message shown after successful submission",
+        display_name: "Success Message",
+      },
+      form_disclaimer: {
+        type: "text",
+        max_length: 300,
+        description: "SEMANTIC:form_disclaimer - Small print below form (e.g., privacy policy notice)",
+        display_name: "Form Disclaimer",
+      },
+    },
+    is_root: false,
+    is_nestable: true,
+    color: "#4caf50",
+  },
+
+  // 10. Footer Section (depends on footer_link)
   {
     name: "footer_section",
     display_name: "Footer",
@@ -427,6 +505,7 @@ const components = [
           "features_section",
           "clinical_data_section",
           "investor_resources_section",
+          "contact_form_section",
           "footer_section",
         ],
         description: "SEMANTIC:page_sections - Page content sections",
@@ -468,18 +547,18 @@ async function createComponent(component: typeof components[0]) {
 
     if (existing) {
       console.log(`🔄 Updating: ${component.display_name} (ID: ${existing.id})...`);
-      // @ts-ignore
-      await client.put(`spaces/${SPACE_ID}/components/${existing.id}`, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (client as any).put(`spaces/${SPACE_ID}/components/${existing.id}`, {
         component: { ...component, id: existing.id },
       });
       console.log(`✅ Updated: ${component.display_name}`);
       return existing;
     }
 
-    // @ts-ignore
-    const response = (await client.post(`spaces/${SPACE_ID}/components/`, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response = await (client as any).post(`spaces/${SPACE_ID}/components/`, {
       component,
-    })) as any;
+    });
     console.log(`✅ Created: ${component.display_name}`);
     return response.data;
   } catch (error: unknown) {

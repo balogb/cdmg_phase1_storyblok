@@ -54,11 +54,36 @@ async function createPages() {
         seo_description: "Get in touch with our investor relations or medical team.",
         body: [
           {
+            component: "contact_form_section",
+            section_title: "Contact Us",
+            section_subtitle: "Have questions about our clinical trials or investment opportunities? We're here to help.",
+            contact_email: "info@nexusbio.com",
+            contact_phone: "+1 (555) 123-4567",
+            address: "123 Innovation Drive\nSuite 400\nBoston, MA 02110",
+            inquiry_types: "Investor Relations,Clinical Trial Information,Partnership Opportunities,Media Inquiry,General Inquiry",
+            submit_button_text: "Send Message",
+            success_title: "Message Sent!",
+            success_message: "Thank you for reaching out. Our team will respond within 2 business days.",
+            form_disclaimer: "By submitting this form, you agree to our privacy policy. We will never share your information with third parties.",
+          },
+        ],
+      },
+    },
+    {
+      name: "Clinical Data",
+      slug: "clinical-data",
+      content: {
+        component: "page",
+        seo_title: "Clinical Data | NexusBio Therapeutics",
+        seo_description: "Review our Phase 3 clinical trial results and research data.",
+        body: [
+          {
             component: "hero_section",
-            headline: "Get in Touch",
-            subheadline: "Whether you are an investor, researcher, or patient, we want to hear from you.",
-            cta_text: "Email Us",
-            cta_link: { url: "mailto:info@nexusbio.com", linktype: "url" },
+            headline: "Clinical Trial Results",
+            subheadline: "Rigorous science. Meaningful outcomes. Our data speaks for itself.",
+            cta_text: "View Full Report",
+            cta_link: { url: "#data", linktype: "url" },
+            show_trial_badge: true,
             legal_disclaimer: {
               type: "doc",
               content: [
@@ -66,13 +91,56 @@ async function createPages() {
                   type: "paragraph",
                   content: [
                     {
-                      text: "Contact information provided for institutional inquiries only.",
+                      text: "Data presented is from ongoing clinical trials. Results may vary. Not intended as medical advice.",
                       type: "text",
                     },
                   ],
                 },
               ],
             },
+          },
+          {
+            component: "clinical_data_section",
+            section_title: "Phase 3 Trial Results",
+            data_points: [
+              {
+                component: "stat_block",
+                metric: "73%",
+                metric_label: "Overall Response Rate",
+                context: "vs. 45% in standard of care arm",
+                _uid: "stat-1",
+              },
+              {
+                component: "stat_block",
+                metric: "18.2",
+                metric_label: "Median PFS (months)",
+                context: "Progression-free survival",
+                _uid: "stat-2",
+              },
+              {
+                component: "stat_block",
+                metric: "42%",
+                metric_label: "Reduction in Adverse Events",
+                context: "Grade 3+ events vs. comparator",
+                _uid: "stat-3",
+              },
+            ],
+            trial_disclaimer: {
+              type: "doc",
+              content: [
+                {
+                  type: "paragraph",
+                  content: [
+                    {
+                      text: "Results from NXB-301 Phase 3 trial (n=847). Primary endpoint: Overall Response Rate. Secondary endpoints: PFS, OS, safety. Data cutoff: January 2024.",
+                      type: "text",
+                    },
+                  ],
+                },
+              ],
+            },
+            data_source: "NXB-301 Phase 3 Clinical Trial, Data on File",
+            _uid: "clinical-section-1",
           },
         ],
       },
@@ -100,8 +168,9 @@ async function createPages() {
         });
       }
       console.log(`✅ ${page.name} ready!`);
-    } catch (error: unknown) {
-      console.error(`❌ Failed ${page.name}:`, error.response?.data || error.message);
+    } catch (error) {
+      const err = error as { response?: { data?: unknown }; message?: string };
+      console.error(`❌ Failed ${page.name}:`, err.response?.data || err.message);
     }
   }
 }

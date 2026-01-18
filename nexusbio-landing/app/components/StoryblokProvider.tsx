@@ -8,6 +8,7 @@ import ClinicalDataSection from "@/app/components/storyblok/ClinicalDataSection"
 import StatBlock from "@/app/components/storyblok/StatBlock";
 import InvestorResourcesSection from "@/app/components/storyblok/InvestorResourcesSection";
 import ResourceLink from "@/app/components/storyblok/ResourceLink";
+import ContactFormSection from "@/app/components/storyblok/ContactFormSection";
 import FooterSection from "@/app/components/storyblok/FooterSection";
 import FooterLink from "@/app/components/storyblok/FooterLink";
 import Page from "@/app/components/storyblok/Page";
@@ -20,6 +21,7 @@ const components = {
   stat_block: StatBlock,
   investor_resources_section: InvestorResourcesSection,
   resource_link: ResourceLink,
+  contact_form_section: ContactFormSection,
   footer_section: FooterSection,
   footer_link: FooterLink,
   page: Page,

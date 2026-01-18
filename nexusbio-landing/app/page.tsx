@@ -2,6 +2,7 @@ import { getStoryBySlug } from "@/app/lib/storyblok-client";
 import { StoryblokStory } from "@storyblok/react/rsc";
 import { Metadata } from "next";
 import { draftMode } from "next/headers";
+import { Suspense } from "react";
 import WorkflowBanner from "@/app/components/layout/WorkflowBanner";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,10 +73,12 @@ export default async function HomePage() {
 
   return (
     <>
-      <WorkflowBanner 
-        workflowStepId={story.workflow_step_id} 
-        tagList={story.tag_list} 
-      />
+      <Suspense fallback={null}>
+        <WorkflowBanner
+          workflowStepId={story.workflow_step_id}
+          tagList={story.tag_list}
+        />
+      </Suspense>
       <StoryblokStory story={story} />
     </>
   );

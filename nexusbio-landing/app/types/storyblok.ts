@@ -128,6 +128,22 @@ export const GlobalSettingsSchema = z.object({
   _uid: z.string(),
 });
 
+export const ContactFormSectionSchema = z.object({
+  component: z.literal("contact_form_section"),
+  section_title: z.string().min(1).max(100),
+  section_subtitle: z.string().max(250).optional(),
+  contact_email: z.string().email().optional(),
+  contact_phone: z.string().max(30).optional(),
+  address: z.string().max(200).optional(),
+  additional_info: StoryblokRichtextSchema.optional(),
+  inquiry_types: z.string().optional(), // Comma-separated list
+  submit_button_text: z.string().max(30).optional(),
+  success_title: z.string().max(60).optional(),
+  success_message: z.string().max(200).optional(),
+  form_disclaimer: z.string().max(300).optional(),
+  _uid: z.string(),
+});
+
 export const PageSchema = z.object({
   component: z.literal("page"),
   body: z.array(
@@ -136,6 +152,7 @@ export const PageSchema = z.object({
       FeaturesSectionSchema,
       ClinicalDataSectionSchema,
       InvestorResourcesSectionSchema,
+      ContactFormSectionSchema,
       FooterSectionSchema,
     ])
   ).default([]),
@@ -176,5 +193,6 @@ export type FooterLinkStoryblok = z.infer<typeof FooterLinkSchema>;
 export type FooterSectionStoryblok = z.infer<typeof FooterSectionSchema>;
 export type NavItemStoryblok = z.infer<typeof NavItemSchema>;
 export type GlobalSettingsStoryblok = z.infer<typeof GlobalSettingsSchema>;
+export type ContactFormSectionStoryblok = z.infer<typeof ContactFormSectionSchema>;
 export type PageStoryblok = z.infer<typeof PageSchema>;
 export type StoryblokStory = z.infer<typeof StorySchema>;
